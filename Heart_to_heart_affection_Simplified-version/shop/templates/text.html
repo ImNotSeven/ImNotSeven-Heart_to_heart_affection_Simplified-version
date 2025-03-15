@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="{% block 关键词 %}书,儿童书籍,社会科学{% endblock 关键词 %}">
+    <meta name="description" content="{% block 网页描述 %}这是网上书店{% endblock 网页描述 %}">
+    <title>{% block 网页标题 %}网上书店{% endblock 网页标题 %}</title>
+</head>
+<body>
+    <header>
+        <center>
+            <img src="{% static 'images/OnlineBookstore.png' %}" alt="网上书店">
+        </center>
+    </header>
+    <nav>
+    <a href="{% url 'shop:home' %}">所有商品</a>
+    {% for 每个类别 in 所有类别 %}
+        <a href="{% url 'shop:category' 每个类别.id %}">{{ 每个类别.名称 }}</a>
+    {% endfor %}
+    <a href="a">购物车</a>
+    </nav>
+
+    <main>
+       {% for 每个类别, 该类商品 in 类别与商品 %}
+        <h2>{{ 每个类别.名称 }}</h2>
+        <img src="{{ 每个类别.图片.url }}" alt="{{ 每个类别.名称 }}">
+        {% for 每件商品 in 该类商品 %}
+            <h3>
+            <a href="{% url 'shop:detail' 每个类别.id 每件商品.id %}">{{ 每件商品.名称 }}</a>
+            </h3>
+            <p>{{ 每件商品.描述 }}</p>
+            <br>
+            <img src="{{ 每件商品.图片.url }}" alt="{{ 每件商品.名称 }}">
+            <br>
+            <h4>{{ 每件商品.价格 }}元</h4>
+            <br>
+        {% endfor %}
+    {% endfor %}
+    </main>
+
+    <footer>
+        <center>&copy;网上书店，版权所有</center>
+    </footer>
+</body>
+</html>

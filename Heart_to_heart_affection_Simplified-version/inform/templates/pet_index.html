@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索结果</title>
+    <style>
+        body{
+        background-color: #FCD5D5;
+        }
+        .product-card {
+            border: 1px solid #ccc; /* 边框 */
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影 */
+            padding: 15px; /* 内边距 */
+            text-align: center; /* 内容居中 */
+            transition: transform 0.3s; /* 过渡效果 */
+            background-color: #fff; /* 背景颜色 */
+            margin: 10px; /* 设置间距 */
+            flex: 0 0 calc(20% - 20px); /* 每个卡牌占 20% 宽度 */
+            box-sizing: border-box; /* 包含内边距和边框 */
+            background-color: #FFEFEF;
+        }
+
+        .product-card img {
+            max-width: 100%; /* 图片自适应 */
+            height: auto; /* 高度自适应 */
+            border-radius: 5px; /* 图片圆角 */
+        }
+
+        .product-card h3 a {
+            text-decoration: none; /* 去掉下划线 */
+            color: #000; /* 链接颜色 */
+        }
+
+        .product-card h4 {
+            color: red; /* 价格颜色 */
+        }
+        .link-wrapper {
+                   display: inline-block; /* 将导航栏显示为内联块元素 */
+             }
+             .link-wrapper a {
+                    margin-right: 10px; /* 设置元素间的右边距 */
+                    text-decoration: none; /* 去掉下划线 */
+                    padding: 5px 15px; /* 添加一些内边距 */
+                    border: 2px solid #000; /* 添加边框 */
+                    border-radius: 5px; /* 圆角 */
+                    background-color: #45a049;
+                    color: white; /* 文字颜色 */
+                    transition: background-color 0.3s, color 0.3s;
+             }
+             .link-wrapper a:hover {
+                   background-color: #367c39; /* 鼠标悬停时的背景色 */
+                   color: #ffcc00; /* 鼠标悬停时的文字颜色 */
+             }
+    </style>
+</head>
+<body>
+<li class="link-wrapper">
+<a href="{% url 'pet_list' %}">返回领养中心</a>
+</li>
+<main>
+	{% if error_msg %}
+		<p>{{ error_msg }}</p>
+	{% endif %}
+
+	{% for post in post_list %}
+	    <div class="product">
+            <div class="product-card">
+                <h3><a href="{% url 'pet_search-detail' post.id %}">{{ post.name }} - {{ post.sub_type }}</a></h3>
+                <a href="{% url 'pet_search-detail' post.id %}">
+                    <img src="{{ post.image.url }}" alt="{{ post.name }}">
+                </a>
+
+            </div>
+        </div>
+	{% empty %}
+		<div class="no-post">暂时还没有发布的宠物！</div>
+    {% endfor %}
+</main>
+</body>
+</html>

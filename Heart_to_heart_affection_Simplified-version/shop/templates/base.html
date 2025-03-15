@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="{% block 关键词 %}宠物{% endblock 关键词 %}">
+    <meta name="description" content="{% block 网页描述 %}宠物商城{% endblock 网页描述 %}">
+    <title>{% block 网页标题 %}宠物商城{% endblock 网页标题 %}</title>
+    <style>
+    #top_right {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex; /* 使用 Flexbox 进行布局 */
+        align-items: center; /* 垂直居中 */
+    }
+
+    /* 图片和链接的样式 */
+    #top_right img, #top_right a {
+        margin-right: 10px; /* 设置元素间的右边距 */
+    }
+    </style>
+</head>
+<body>
+    <header>
+    <center>
+<!--            <img src="static\images\OnlineBookstore.png" alt="网上书店" height="50" width="50" style="float:left;">-->
+    </center>
+    </header>
+
+
+
+    <main>
+        {% block 主体 %}
+        这是主体部分
+        {% endblock 主体 %}
+    </main>
+
+    {% include "footer.html" %}
+</body>
+</html>

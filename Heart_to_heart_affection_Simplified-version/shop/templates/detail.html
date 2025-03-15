@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="{% block 关键词 %}宠物{% endblock 关键词 %}">
+    <meta name="description" content="{% block 网页描述 %}宠物{% endblock 网页描述 %}">
+    <title>{% block 网页标题 %}宠物商品详情页面{% endblock 网页标题 %}</title>
+    <style>
+    #top_right {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex; /* 使用 Flexbox 进行布局 */
+        align-items: center; /* 垂直居中 */
+    }
+
+    /* 图片和链接的样式 */
+    #top_right a {
+        margin-right: 10px; /* 设置元素间的右边距 */
+        text-decoration: none; /* 去掉下划线 */
+        padding: 10px 15px; /* 添加一些内边距 */
+        border: 2px solid #000; /* 添加边框 */
+        border-radius: 5px; /* 圆角 */
+        background-color: #45a049;
+    }
+    body{
+    background-color: #FFEFEF;
+    }
+    .picture {
+            position: relative; /* 将容器设置为相对定位 */
+            text-align: center; /* 水平居中图片 */
+            margin-top:20px;
+
+    }
+    h2{
+        position: relative;
+        margin-top:-100px;
+        text-align:center;
+
+    }
+    #nav-container {
+        padding: 70px 0; /* 上下留出一定的空间 */
+        width: 100%;
+
+    }
+    /* 导航栏样式 */
+    nav {
+        display: inline-block; /* 将导航栏显示为内联块元素 */
+
+    }
+
+    /* 单个链接样式 */
+    nav a {
+        display: flex; /* 使链接成为弹性盒子 */
+        justify-content: center; /* 水平居中对齐 */
+        align-items: center; /* 垂直居中对齐 */
+        text-decoration: none; /* 去掉下划线 */
+        padding: 10px 15px; /* 添加内边距 */
+        border: 2px solid #000; /* 添加边框 */
+        border-radius: 5px; /* 圆角 */
+        background-color: #45a049; /* 背景颜色 */
+        color: white; /* 文字颜色 */
+        transition: background-color 0.3s; /* 添加过渡效果 */
+    }
+    .cart_link_container {
+            position: relative;
+    }
+    .cart_info {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #E5C6C6;
+            border: 1px solid #ccc;
+            padding: 10px;
+            z-index: 999;
+            /* 设置初始尺寸 */
+            width: 200px;
+            height: 400px;
+            overflow: auto; /* 添加滚动条，以防内容过多 */
+            transition: all 0.3s ease; /* 添加过渡效果 */
+    }
+    .cart_link_container:hover .cart_info {
+            display: block;
+            /* 调整展开时的尺寸 */
+            width: 150px;
+            height: 250px;
+    }
+    .bulk {
+        position: absolute;
+        top: 50%; /* 从页面顶部向下偏移 50% */
+        left: 50%; /* 从页面左侧向右偏移 50% */
+        transform: translate(-50%, -50%); /* 通过偏移来使其水平和垂直居中 */
+        width: 80%; /* 可以根据需要调整宽度 */
+        max-width: 500px; /* 设置最大宽度，避免在大屏幕上过宽 */
+
+        padding: 20px; /* 设置内边距 */
+
+    }
+    </style>
+</head>
+<body>
+    <header>
+        <center>
+            <img src="{% static 'images/pet.png' %}" alt="pet"  style="float:left;">
+        </center>
+    </header>
+    <div id="top_right">
+    <div class="cart_link_container">
+            <a href="{% url 'shop:show_cart' %}" class="cart-link" style="border: none;background-color: #FFEFEF;">
+                <img src="{% static 'images/cart.png' %}" alt="购物车图标">
+            </a>
+        <div class="cart_info">
+            <!-- 这里放置购物车信息 -->
+            <ul class="cart_goods_show">
+                {% for cart_goods in cart_goods_list %}
+                <li>
+                    <img src="{{ cart_goods.图片.url }}" style="width:100px;" alt="{{ 每个类别.图片.url }}">
+                    {{ cart_goods.名称 }}
+                    <div>{{ cart_goods.goods_num }}个</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <a href="{% url 'shop:shop' %}">返回商城首页</a>
+    <a href="http://127.0.0.1:8000/user/user_center/">个人中心</a>
+    {% if user.is_authenticated %}
+    <a href="http://127.0.0.1:8000/user/logout/">登出</a>
+    {% else %}
+    <a href="http://127.0.0.1:8000/user/login/">登录/注册</a>
+    {% endif %}
+    </div>
+    <div id="nav-container">
+    <nav>
+        <a href="{% url 'shop:shop' %}">所有商品</a>
+        {% for 每个类别 in 所有类别 %}
+            <a href="{% url 'shop:category' 每个类别.id %}">{{ 每个类别.名称 }}</a>
+        {% endfor %}
+    </nav>
+    </div>
+    <div class="bulk">
+    <h2>{{ 商品.名称 }}</h2>
+    <div class="picture">
+    <img src="{{ 商品.图片.url }}" alt="">
+    </div>
+    <!--<h3 style="text-align:center;">作者：{{ 商品.作者 }}</h3>-->
+    {% if 商品.库存 > 0 %}
+        <p style="text-align: center;">库存{{ 商品.库存 }}</p>
+    {% else %}
+        <p style="text-align: center;">暂时缺货</p>
+    {% endif %}
+    <h4 style="text-align: center;">价格：{{ 商品.价格 }}元</h4>
+    <div class="buy" style="text-align:center;">
+        <div class="num_name">数量:</div>
+        <div class="num_add">
+            <input type="text" class="num_show" value="1" disabled="">
+        </div>
+
+        <div class="operate_btn">
+            <a href="{% url 'shop:add_cart' 商品.id %}" class="add_cart" id="add_cart">加入购物车</a>
+        </div>
+    </div>
+    <p>{{ 商品.描述 }}</p>
+
+    <footer>
+      <center>&copy;心连宠</center>
+    </footer>
+    </div>
+</body>
+</html>
+
+
