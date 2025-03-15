@@ -1,0 +1,2 @@
+# ImNotSeven-Heart_to_heart_affection_Simplified-version
+ImNotSeven/Heart_to_heart_affection_Simplified-version(心连宠)简洁版本，删除了多余的数据集文件
