@@ -16,4 +16,4 @@ gr.Interface(inputs=["image",gr.Slider(minimum=0,maximum=1,value=base_conf),gr.S
              fn=det_image,
              title=Title,
              description=des,
-             examples=[["yolov5_Simplified/VOCdevkit/images/val/006.jpg", base_conf, base_iou],["yolov5_Simplified/VOCdevkit/images/val/American Curl_12.jpg", base_conf, base_iou]]).launch()
+             examples=[["yolov5_Simplified/006.jpg", base_conf, base_iou],["yolov5_Simplified/American Curl_12.jpg", base_conf, base_iou]]).launch()
