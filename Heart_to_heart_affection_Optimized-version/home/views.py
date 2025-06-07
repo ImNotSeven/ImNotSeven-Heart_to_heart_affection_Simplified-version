@@ -59,8 +59,8 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 import shutil
 
-YOLO_SCRIPT_PATH = r"D:\training program\Heart_to_heart_affection_Simplified-version - 副本 (2)\yolov5_Simplified\detect.py"
-YOLO_WEIGHTS_PATH = r"D:\training program\Heart_to_heart_affection_Simplified-version - 副本 (2)\yolov5_Simplified\runs\train\exp18\weights\best.pt"
+YOLO_SCRIPT_PATH = r"D:\training program\Heart_to_heart_affection_Optimized-version\yolov5_Simplified\detect.py"
+YOLO_WEIGHTS_PATH = r"D:\training program\Heart_to_heart_affection_Optimized-version\yolov5_Simplified\runs\train\exp18\weights\best.pt"
 YOLO_SOURCE_DIR = os.path.join(settings.BASE_DIR, 'media', 'uploads')
 YOLO_PROJECT_DIR = os.path.join(settings.BASE_DIR, 'media', 'detection')
 YOLO_NAME = 'results'
