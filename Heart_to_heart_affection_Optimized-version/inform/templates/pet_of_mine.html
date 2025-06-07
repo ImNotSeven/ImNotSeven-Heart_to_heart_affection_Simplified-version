@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我领养的宠物</title>
+    <style>
+        /* 简单的样式调整，可以根据需要扩展 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #FFEFEF;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .pet-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .pet-card {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 250px;
+            text-align: center;
+            background-color: #fff;
+        }
+        .pet-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .nav-link {
+            color: blue;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .nav-link {
+            display: block; /* 设置为块级元素 */
+            margin-top: 10px; /* 设置与<p>的间距 */
+
+            clear: both; /* 确保没有浮动影响 */
+        }
+        .link-wrapper {
+            display: inline-block; /* 将导航栏显示为内联块元素 */
+        }
+
+        .link-wrapper a {
+            margin-right: 10px; /* 设置元素间的右边距 */
+            text-decoration: none; /* 去掉下划线 */
+            padding: 10px 15px; /* 添加一些内边距 */
+            border: 2px solid #000; /* 添加边框 */
+            border-radius: 5px; /* 圆角 */
+            background-color: #45a049;
+            color: white; /* 文字颜色 */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+    </style>
+</head>
+<body>
+    <li class="link-wrapper">
+        <a href="{% url 'pet_list' %}">返回领养中心</a>
+    </li>
+    <header>
+        <h1>我领养的宠物</h1>
+    </header>
+    <div class="pet-grid">
+        <!-- 循环展示用户领养的宠物 -->
+        {% for application in my_pets %}
+        <div class="pet-card">
+            <img src="{{ application.pet_card.image.url }}" alt="{{ application.pet_card.name }}" class="pet-image">
+            <h3>{{ application.pet_card.name }}</h3>
+            <p>种类: {{ application.pet_card.get_pet_type_display }}</p>
+            <p>城市: {{ application.pet_card.get_city_display }}</p>
+            <p>年龄: {{ application.pet_card.age }} 岁</p>
+            <p>颜色: {{ application.pet_card.get_color_display }}</p>
+            <p>体型: {{ application.pet_card.get_size_display }}</p>
+            <p>发布人: {{ application.pet_card.created_by.username }}</p>
+            <p>联系电话: {{ application.pet_card.phone.phone }}</p>
+            <p>领养申请日期: {{ application.application_date|date:"Y-m-d " }}</p> <!-- 领养申请的日期 -->
+        </div>
+        {% empty %}
+        <!-- 当用户没有领养任何宠物时显示 -->
+        <p>你还没有领养任何宠物。</p>
+        <li class="link-wrapper">
+        <a href="{% url 'pet_list' %}" class="nav-link">去领养</a>
+        </li>
+        {% endfor %}
+    </div>
+
+    <footer>
+        <p>© 2024 心连宠。</p>
+    </footer>
+</body>
+</html>

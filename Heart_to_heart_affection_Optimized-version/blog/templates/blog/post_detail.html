@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
+
+<div class="container">
+    <a href="{% url 'blog_page' %}" class="btn-back">返回社区主页</a>
+
+    <div class="post-detail">
+        <h1>帖子标题: {{ post.title }}</h1>
+        <p>帖子内容: {{ post.content }}</p>
+        {% if post.image %}
+            <img src="{{ post.image.url }}" alt="Post image" />
+        {% endif %}
+        <div class="post-info">
+            <p>点赞数: {{ post.likes.count }}</p>
+            <a href="{% url 'like_post' post.pk %}?next={{ request.path }}&page={{ request.GET.page|default:1 }}" class="btn-like {%if post in request.user.liked_posts.all %}liked{%endif%}">点赞/取消点赞</a>
+        </div>
+    </div>
+
+    <div class="comments-section">
+        <h3>评论</h3>
+        {% if post.comments.count > 0 %}
+            {% for comment in post.comments.all %}
+                <div class="comment-box">
+                    <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+                    {% if comment.image %}
+                        <img src="{{ comment.image.url }}" alt="Comment Image" style="max-width: 100px; max-height: 100px;">
+                    {% endif %}
+                    <p><small>发表于 {{ comment.created_at }}</small></p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>暂无评论</p>
+        {% endif %}
+    </div>
+
+    <div class="comment-form">
+        <h3>发表评论</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit" class="btn-submit">提交</button>
+        </form>
+    </div>
+</div>

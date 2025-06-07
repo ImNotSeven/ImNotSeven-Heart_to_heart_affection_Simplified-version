@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宠物领养中心</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        .top-panel {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #FFEFEF;
+        }
+        .left-panel {
+
+            width: 200px;
+            padding: 20px;
+            background-color: #FCD5D5;
+        }
+        .nav-link {
+            display: block;
+            margin-bottom: 10px;
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+        .nav-link:hover {
+            color: #007bff;
+        }
+        .right-panel {
+            flex: 1;
+            padding: 20px;
+            background-color: #FFEFEF;
+        }
+        .auth-buttons {
+            text-align: right;
+        }
+        .auth-btn {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #45a049;
+            border-radius: 5px;
+        }
+        .auth-btn:hover {
+            background-color: #367c39; /* 鼠标悬停时的背景色 */
+            color: #ffcc00; /* 鼠标悬停时的文字颜色 */
+        }
+        .filter-section {
+            padding: 20px;
+            background-color: #red;
+            margin-top: 20px;
+        }
+        .pet-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .pet-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+        }
+        .pet-card img {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .pet-card h3 {
+            margin: 10px 0;
+        }
+
+        .pagination {
+        text-align: center;
+        margin: 20px 0;
+        }
+
+        .pagination a {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        .pagination span.current {
+            padding: 5px 10px;
+            background-color: #f1f1f1;
+            color: #333;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+        #searchform {
+                position: absolute;
+                top: 10;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        #searchform input[type="search"] {
+                width: 300px; /* 设置搜索框的宽度 */
+                height: 30px; /* 设置搜索框的高度 */
+                padding: 5px; /* 可选：设置内边距以增加搜索框的外观 */
+                font-size: 16px; /* 可选：设置字体大小 */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-panel">
+            <div class="left-panel">
+                <a href="{% url 'upload_pet_card' %}" class="nav-link">发布领养信息</a>
+                <a href="{% url 'pet_of_mine' %}" class="nav-link">我的领养</a>
+            </div>
+            <div class="right-panel">
+                <div class="auth-buttons">
+                    <form role="search" method="get" id="searchform" action="{% url 'pet_search' %}">
+                        <input type="search" name="q" placeholder="搜索" required>
+                        <button type="submit" style="background:none;border:none;margin-left:-2em">&#x1F50D;</button>
+                    </form>
+                    <a href="http://127.0.0.1:8000" class="auth-btn">返回首页</a>
+                    {% if user.is_authenticated %}
+                    <a href="http://127.0.0.1:8000/user/logout/" class="auth-btn">登出</a>
+                    {% else %}
+                    <a href="http://127.0.0.1:8000/user/login/" class="auth-btn">登录/注册</a>
+                    {% endif %}
+                    <a href="http://127.0.0.1:8000/user/user_center/" class="auth-btn">个人中心</a>
+                    <a href="http://127.0.0.1:8000/blog/" class="auth-btn">社区</a>
+                    <a href="http://127.0.0.1:8000/shop/" class="auth-btn">商店</a>
+                </div>
+                <div class="filter-section">
+                  <!-- pet_list.html -->
+<!--<h2>筛选条件</h2>-->
+<!--<form method="get" action="{% url 'pet_list' %}">-->
+<!--    <label for="pet_type">宠物种类:</label>-->
+<!--    <select name="pet_type" id="pet_type" onchange="this.form.submit()">-->
+<!--        {% for value, label in form.pet_type.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.pet_type %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <label for="sub_type">子分类:</label>-->
+<!--    <select name="sub_type" id="sub_type">-->
+<!--        <option value="">全部</option>-->
+<!--        {% for value, label in form.sub_type.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.sub_type %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <label for="city">所在城市:</label>-->
+<!--    <select name="city" id="city">-->
+<!--        <option value="">全部</option>-->
+<!--        {% for value, label in form.city.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.city %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <label for="health_status">健康状况:</label>-->
+<!--    <select name="health_status" id="health_status">-->
+<!--        <option value="">全部</option>-->
+<!--        {% for value, label in form.health_status.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.health_status %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <label for="is_stray">是否为流浪动物:</label>-->
+<!--    <input type="checkbox" name="is_stray" id="is_stray" {% if request.GET.is_stray %}checked{% endif %}><br><br>-->
+
+<!--    <label for="age_min">最小年龄:</label>-->
+<!--    <input type="number" name="age_min" id="age_min" value="{{ request.GET.age_min }}"><br><br>-->
+
+<!--    <label for="age_max">最大年龄:</label>-->
+<!--    <input type="number" name="age_max" id="age_max" value="{{ request.GET.age_max }}"><br><br>-->
+
+<!--    <label for="color">颜色:</label>-->
+<!--    <select name="color" id="color">-->
+<!--        <option value="">全部</option>-->
+<!--        {% for value, label in form.color.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.color %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <label for="size">体型大小:</label>-->
+<!--    <select name="size" id="size">-->
+<!--        <option value="">全部</option>-->
+<!--        {% for value, label in form.size.field.choices %}-->
+<!--        <option value="{{ value }}" {% if value == request.GET.size %}selected{% endif %}>{{ label }}</option>-->
+<!--        {% endfor %}-->
+<!--    </select><br><br>-->
+
+<!--    <button type="submit">筛选</button>-->
+<!--    <h2>筛选条件</h2>-->
+<!--<p>当前筛选条件: {{ request.GET }}</p> -->
+<!--</form>-->
+
+
+                </div>
+                <div class="pet-list">
+                    <h2>宠物信息</h2>
+                    <div class="pet-grid">
+                        {% for pet in page_obj %}
+                        <div class="pet-card">
+                            <img src="{{ pet.image.url }}" alt="{{ pet.name }}" class="pet-image">
+                            <h3><p>名字: {{ pet.name  }}</p></h3>
+                            <p>种类: {{pet.sub_type }}</p>
+                            <!--<p>种类: {{ pet.get_pet_type_display }}</p>
+                            <p>城市: {{ pet.get_city_display }}</p>
+                            <p>健康状况: {{ pet.get_health_status_display }}</p>
+                            <p>是否流浪: {{ pet.is_stray|yesno:"是,否" }}</p>
+                            <p>年龄: {{ pet.age }} 岁</p>
+                            <p>颜色: {{ pet.get_color_display }}</p>
+                            <p>体型: {{ pet.get_size_display }}</p>-->
+                            <p>发布人: {{ pet.created_by.username }}</p>  <!-- 显示发布人 -->
+                            <form method="post" action="{% url 'pet_detail' pet.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="auth-btn">查看详情</button>
+                            </form>
+                        </div>
+                        {% empty %}
+                        <p>没有符合条件的宠物。</p>
+                        {% endfor %}
+                    </div>
+                    <!-- 分页控件 -->
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">&laquo; 首页</a>
+                                <a href="?page={{ page_obj.previous_page_number }}">上一页</a>
+                            {% endif %}
+
+                            <span class="current">
+                                第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页
+                            </span>
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">下一页</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}">尾页 &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const petTypeSelect = document.getElementById('id_pet_type');
+            const subTypeSelect = document.getElementById('id_sub_type');
+    
+            // 子分类选项
+            const SUBTYPE_CHOICES = {
+                'cat': [
+                    ['Chinese_garden','中华田园猫'],
+                    ['american_shorthair', '美短'],
+                    ['british_shorthair', '英短'],
+                    ['siamese', '暹罗猫'],
+                    ['russian_blue', '蓝猫'],
+                    ['maine_coon', '缅因猫'],
+                    ['norwegian_forest', '挪威森林猫'],
+                    ['scottish_fold', '折耳猫'],
+                    ['persian', '波斯猫'],
+                    ['bengal', '孟加拉猫'],
+                    ['snowshoe', '雪鞋猫'],
+                    ['british_longhair', '英国长毛猫'],
+                    ['american_shorthair_tabby', '美短狸花猫']
+                ],
+                'dog': [
+                    ['Chinese_rural','中华田园犬'],
+                    ['Chihuahua','吉娃娃'],
+                    ['golden_retriever', '金毛'],
+                    ['labrador', '拉布拉多'],
+                    ['german_shepherd', '德牧'],
+                    ['french_bulldog', '法斗'],
+                    ['poodle', '贵宾犬'],
+                    ['husky', '哈士奇'],
+                    ['shiba_inu', '柴犬'],
+                    ['border_collie', '边牧犬'],
+                    ['bulldog', '斗牛犬'],
+                    ['dachshund', '腊肠犬'],
+                    ['bichon_frise', '比熊犬'],
+                    ['yorkshire_terrier', '约克夏犬'],
+                    ['schnauzer', '雪纳瑞']
+                ]
+            };
+    
+            petTypeSelect.addEventListener('change', function() {
+                const selectedType = petTypeSelect.value;
+                subTypeSelect.innerHTML = ''; // 清空子分类选项
+    
+                if (selectedType) {
+                    const subTypes = SUBTYPE_CHOICES[selectedType] || [];
+                    subTypes.forEach(([value, label]) => {
+                        const option = document.createElement('option');
+                        option.value = value;
+                        option.textContent = label;
+                        subTypeSelect.appendChild(option);
+                    });
+                } else {
+                    // 如果没有选择种类，清空子分类选择框
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = '请选择';
+                    subTypeSelect.appendChild(option);
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

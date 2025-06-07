@@ -1,0 +1,103 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'blog/style.css' %}">
+<title>宠遇社区</title>
+<div class="container">
+
+<ul style="list-style-type: none; margin: -20px; padding: 0; overflow: hidden; background-color: #EEC6C6;">
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">回到首页</a>
+    </li>
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000/inform/" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">领养中心</a>
+    </li>
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000/shop/" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">宠物商城</a>
+    </li>
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000/user/user_center/" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">个人中心</a>
+    </li>
+       {% if user.is_authenticated %}
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000/user/logout/" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">登出</a></li>
+        {% else %}
+    <li style="float: left;">
+        <a href="http://127.0.0.1:8000/user/login/" style="display: block; color: black; text-align: center; padding: 14px 16px; text-decoration: none;">登录/注册</a></li>
+        {% endif %}
+
+</ul>
+
+    <h1 class="title">心连宠-宠遇社区</h1>
+
+
+    <div class="content">
+        <!-- 左侧博客列表部分 -->
+        <div class="left-box">
+
+            <h2>所有帖子</h2>
+            {% for post in posts %}
+                <div class="post">
+                    <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a> <span class="author">by {{ post.author }}</span></h3>
+                    {% if post.image %}  <!-- 检查是否有图片 -->
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="post-image">  <!-- 显示图片 -->
+                    {% endif %}
+                    <p>{{ post.content|truncatewords:30 }}</p>
+                    <div class="post-footer">
+                        <span class="likes">
+                            点赞数: {{ post.likes.count }}
+                            <a href="{% url 'like_post' post.pk %}?next={{ request.path }}&page={{ request.GET.page }}" class="btn-like {%if post in request.user.liked_posts.all %}liked{%endif%}">点赞/取消点赞</a>
+                        </span>
+                        {% if post.author == request.user %}
+                            <a href="{% url 'delete_post' post.id %}" onclick="return confirm('确定要删除这个帖子吗？');">删除帖子</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="comments-section">
+                        <h4>评论:</h4>
+                        {% for comment in post.limited_comments %}
+                            <p><strong>{{ comment.author }}</strong>: {{ comment.content }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% empty %}
+                <p>暂无帖子发布</p>
+            {% endfor %}
+
+            <!-- 分页功能 -->
+            <div class="pagination">
+                <span class="step-links">
+                    {% if posts.has_previous %}
+                        <a href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}">&laquo; 首页</a>
+                        <a href="?page={{ posts.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">上一页</a>
+                    {% endif %}
+
+                    <span class="current">
+                        第 {{ posts.number }} 页/共 {{ posts.paginator.num_pages }}页
+                    </span>
+
+                    {% if posts.has_next %}
+                        <a href="?page={{ posts.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}">下一页</a>
+                        <a href="?page={{ posts.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}">尾页 &raquo;</a>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <!-- 右侧创建新帖子部分 -->
+        <div class="right-box">
+            <!-- 搜索功能 -->
+            <div class="search-box">
+                <form method="GET" action="{% url 'blog_page' %}">
+                    <input type="text" name="search" placeholder="请输入搜索内容" value="{{ search_query }}">
+                    <button type="submit" class="btn-submit">搜索</button>
+                </form>
+            </div>
+
+            <h2>发布帖子</h2>
+            <form method="POST" class="post-form" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ post_form.as_p }}
+                <button type="submit" name="post_form" class="btn-submit">发布</button>
+            </form>
+        </div>
+    </div>
+</div>

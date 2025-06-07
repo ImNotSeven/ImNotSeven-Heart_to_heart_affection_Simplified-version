@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请领养</title>
+    <style>
+        body{
+            background-color: #FCD5D5;
+        }
+        .pet-card {
+                 border: 1px solid #ccc; /* 边框 */
+                 border-radius: 10px; /* 圆角 */
+                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 阴影 */
+                 padding: 15px; /* 内边距 */
+                 text-align: center; /* 内容居中 */
+                 transition: transform 0.3s; /* 添加过渡效果 */
+                 background-color: #FFEFEF;
+                 margin: 50px;
+             }
+             .pet-card h3 a {
+                 text-decoration: none; /* 去掉下划线 */
+                 color: #000; /* 链接颜色 */
+             }
+             .pet-card img {
+                 max-width: 100%; /* 图片自适应 */
+                 height: auto; /* 高度自适应 */
+                 border-radius: 5px; /* 图片圆角 */
+             }
+             .pet-card h4 {
+                  color: #red; /* 价格颜色 */
+             }
+             .link-wrapper {
+                   display: inline-block; /* 将导航栏显示为内联块元素 */
+             }
+             .link-wrapper a {
+                    margin-right: 10px; /* 设置元素间的右边距 */
+                    text-decoration: none; /* 去掉下划线 */
+                    padding: 5px 15px; /* 添加一些内边距 */
+                    border: 2px solid #000; /* 添加边框 */
+                    border-radius: 5px; /* 圆角 */
+                    background-color: #45a049;
+                    color: white; /* 文字颜色 */
+                    transition: background-color 0.3s, color 0.3s;
+             }
+             .link-wrapper a:hover {
+                   background-color: #367c39; /* 鼠标悬停时的背景色 */
+                   color: #ffcc00; /* 鼠标悬停时的文字颜色 */
+             }
+    </style>
+</head>
+<body>
+        <li class="link-wrapper">
+        <a href="{% url 'pet_list' %}" class="btn-back">返回领养中心</a>
+        </li>
+    <h2 style="text-align: center;">申请领养 - {{ pet.name }}</h2>
+    <div class="pet-card">
+
+        <img src="{{ pet.image.url }}" alt="{{ pet.name }}" class="pet-image">
+        <h3>{{ pet.name }}</h3>
+        <p>种类: {{ pet.get_pet_type_display }}</p>
+        <p>城市: {{ pet.get_city_display }}</p>
+        <p>健康状况: {{ pet.get_health_status_display }}</p>
+        <p>是否流浪: {{ pet.is_stray|yesno:"是,否" }}</p>
+        <p>年龄: {{ pet.age }} 岁</p>
+        <p>颜色: {{ pet.get_color_display }}</p>
+        <p>体型: {{ pet.get_size_display }}</p>
+        <p>发布人: {{ pet.created_by.username }}</p>
+    </div>
+
+    <h3>填写领养申请</h3>
+    <form method="post">
+        {% csrf_token %}
+        <label for="applicant_name">申请人姓名:</label><br>
+        <input type="text" name="applicant_name" id="applicant_name" required><br><br>
+
+        <label for="applicant_address">申请人地址:</label><br>
+        <input type="text" name="applicant_address" id="applicant_address" required><br><br>
+
+        <label for="applicant_contact">联系方式:</label><br>
+        <input type="text" name="applicant_contact" id="applicant_contact" required><br><br>
+
+        <label for="reason">申请理由:</label><br>
+        <textarea name="reason" id="reason" required></textarea><br><br>
+
+        <button type="submit">提交申请</button>
+    </form>
+</body>
+</html>

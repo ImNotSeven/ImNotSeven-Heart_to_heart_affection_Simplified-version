@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>订单完成</title>
+    <style>
+        .horizontal-display {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* 五列布局，可根据需要调整 */
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        }
+        .horizontal-display li {
+        text-align: center; /* 可根据需要调整对齐方式 */
+        }
+        body{
+            background-image: linear-gradient(to right, #BBFFFF, #CCCCFF);
+        }
+        hr {
+           height: 5px; /* 高度 */
+            background-color: #66B2FF; /* 背景颜色 */
+            border: none; /* 边框 */
+            margin: 20px 0; /* 外边距 */
+        }
+            .link-wrapper {
+                display: inline-block; /* 将导航栏显示为内联块元素 */
+            }
+
+            .link-wrapper a {
+                margin-right: 10px; /* 设置元素间的右边距 */
+                text-decoration: none; /* 去掉下划线 */
+                padding: 10px 15px; /* 添加一些内边距 */
+                border: 2px solid #000; /* 添加边框 */
+                border-radius: 5px; /* 圆角 */
+                background-color: #45a049;
+                color: white; /* 文字颜色 */
+                transition: background-color 0.3s, color 0.3s;
+                }
+    </style>
+</head>
+<body>
+<div class="">
+    <li class="link-wrapper">
+        <a href="{% url 'shop:show_cart' %}">返回购物车</a>
+    </li>
+</div>
+<h1>订单完成</h1>
+<div>
+<div class="total_count">全部商品<em>{{ cart_goods_count }}</em>件</div>
+<ul class="horizontal-display">
+    <li>商品图片</li>
+    <li>商品名称</li>
+    <li>商品价格</li>
+    <li>数量</li>
+    <li>小计</li>
+
+</ul>
+<hr>
+    {% for order_goods in order_goods_list %}
+        <ul class="horizontal-display">
+            <li><img src="{{ order_goods.goods_info.图片.url }}"></li>
+            <li>{{ order_goods.goods_info.名称 }}<br></li>
+            <li>{{ order_goods.goods_info.价格 }}元</li>
+            <li>{{ order_goods.goods_num }}本</li>
+            <li>{{ order_goods.total_money }}元</li>
+        </ul>
+        <hr>
+    {% endfor %}
+</div>
+<div class="">
+        <dl>
+            <dd>
+                <table>
+                    <tr>
+                        <td>订单编号：</td>
+                        <td>{{ orderinfo.order_id }}</td>
+                    </tr>
+                    <tr>
+                        <td>收货地址：</td>
+                        <td>{{ orderinfo.order_addr }}</td>
+                    </tr>
+                    <tr>
+                        <td>收货人：</td>
+                        <td>{{ orderinfo.order_man }}</td>
+                    </tr>
+                    <tr>
+                        <td>联系电话：</td>
+                        <td>{{ orderinfo.order_phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>备注：</td>
+                        <td>{{ orderinfo.order_extra }}</td>
+                    </tr>
+                </table>
+            </dd>
+        </dl>
+</div>
+<hr>
+<h3>总金额结算</h3>
+    <div>
+        <div>共<em>{{ sum_num }}</em>件商品,总金额<b>{{ sum_money }}</b></div>
+        <div>运费:<b>7元</b></div>
+        <div>实际付款：<b>{{ sum_money|add:7 }}元</b></div>
+    </div>
+</body>
+</html>

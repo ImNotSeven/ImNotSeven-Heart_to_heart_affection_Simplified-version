@@ -1,0 +1,17 @@
+<h2>Login</h2>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">Login</button>
+</form>
+
+{% if form.errors %}
+    <p style="color:red;">Invalid username or password</p>
+{% endif %}
